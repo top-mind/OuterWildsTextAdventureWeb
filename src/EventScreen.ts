@@ -5,6 +5,7 @@ import { Clue } from "./PlayerData";
 import { OWScreen } from "./Screen";
 import { EndScreen } from "./TitleScreen";
 import { feed, timeLoop, gameManager, playerData, messenger, locator, mediumFontData } from "./app";
+import { Translator } from "./Translator";
 
 export abstract class EventScreen extends OWScreen implements DatabaseObserver
 {
@@ -40,7 +41,7 @@ export abstract class EventScreen extends OWScreen implements DatabaseObserver
 
 	renderBackground(): void {}
 
-	render(): void
+	async render(): Promise<void>
 	{
 		push();
 		translate(width/2 - EventScreen.BOX_WIDTH/2, height/2 - EventScreen.BOX_HEIGHT/2);
@@ -55,7 +56,13 @@ export abstract class EventScreen extends OWScreen implements DatabaseObserver
 		    textFont(mediumFontData);
 		    textSize(18);
 			textAlign(LEFT, TOP);
-			text(this.getDisplayText(), 10, 10, EventScreen.BOX_WIDTH - 20, EventScreen.BOX_HEIGHT - 20);
+			// text(this.getDisplayText(), 10, 10, EventScreen.BOX_WIDTH - 20, EventScreen.BOX_HEIGHT - 20);
+			textFont('SimSun');
+			const displayText = this.getDisplayText();
+			const translatedText = await Translator.getInstance().translate(displayText);
+			const finalText = displayText + "\n[译: " + translatedText + "]";
+			text(finalText, 10, 10, EventScreen.BOX_WIDTH - 20, EventScreen.BOX_HEIGHT - 20);
+
 
 		pop();
 

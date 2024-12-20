@@ -1,6 +1,7 @@
 import { Color } from "p5";
 import { mediumFontData, messenger, smallFontData } from "./app";
 import { GlobalObserver, Message } from "./GlobalMessenger";
+import { Translator } from './Translator';
 
 export class StatusFeed implements GlobalObserver
 {
@@ -24,9 +25,12 @@ export class StatusFeed implements GlobalObserver
 
   }
 
-  publish(newLine: string, important: boolean = false): void
-  {
-    this._feed.push(new StatusLine(newLine, important));
+  async publish(newLine: string, important: boolean = false): Promise<void> {
+    const translator = Translator.getInstance();
+    const translatedText = await translator.translate(newLine);
+    let displayText = `${newLine}\n[译: ${translatedText}]`;
+    
+    this._feed.push(new StatusLine(displayText, important));
 
     if (this._feed.length > StatusFeed.MAX_LINES)
     {
@@ -38,7 +42,7 @@ export class StatusFeed implements GlobalObserver
   {
     for (let i: number = 0; i < this._feed.length; i++)
     {
-      if (!this._feed[i].draw(20, 30 + i * 25))
+      if (!this._feed[i].draw(20, 30 + i * 45))
       {
         break; // break if the current line hasn't finished displaying
       }
@@ -74,18 +78,32 @@ export class StatusLine
     }
 
     textAlign(LEFT);
-    textFont(mediumFontData);
-    textSize(18);
     fill(this._lineColor);
-    text(this._line.substring(0, min(this._line.length, this.getDisplayLength())), x, y);
-    textFont(smallFontData);
-
-    // is this line fully displayed?
-    if (this._line.length <= this.getDisplayLength())
-    {
-      return true;
+    
+    const lines = this._line.split('\n');
+    let currentY = y;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (i === 0) {
+        textFont(mediumFontData);
+        textSize(18);
+      } else {
+        textFont('SimSun', 16);
+        x += 10;
+        currentY += 5;
+      }
+      
+      text(line.substring(0, min(line.length, this.getDisplayLength())), x, currentY);
+      currentY += 20;
+      
+      if (i > 0) {
+        x -= 10;
+      }
     }
-    return false;
+    
+    textFont(smallFontData);
+    return this._line.length <= this.getDisplayLength();
   }
 
   getDisplayLength(): number

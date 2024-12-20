@@ -55,12 +55,18 @@ export let mediumFontData: Font;
 (window as any).setup = function setup(): void
 {
   const canvas = document.getElementById("game-canvas");
-  createCanvas(960, 720, null, canvas);
+  createCanvas(1440, 1080, null, canvas);
+
+  // 设置像素密度以改善缩放质量
+  pixelDensity(2);
 
   // Prevent p5 from setting canvas size, we do it in css.
   canvas.style.removeProperty("width");
   canvas.style.removeProperty("height");
 
+  // 添加平滑设置
+  canvas.style.imageRendering = 'auto';
+  
   // Disable context menu on canvas,
   // to avoid interfering with game's right click.
   canvas.oncontextmenu = () => false;

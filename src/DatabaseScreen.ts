@@ -5,6 +5,7 @@ import { Curiosity } from "./Enums";
 import { Clue } from "./PlayerData";
 import { OWScreen } from "./Screen";
 import { playerData, feed, gameManager, mediumFontData } from "./app";
+import { Translator } from "./Translator";
 
 export interface DatabaseObserver
 {
@@ -73,7 +74,7 @@ export class DatabaseScreen extends OWScreen implements ClueButtonObserver
 
   update(): void {}
 
-  render(): void
+  async render(): Promise<void>
   {
     fill(0, 0, 0);
     stroke(0, 0, 100);
@@ -102,7 +103,12 @@ export class DatabaseScreen extends OWScreen implements ClueButtonObserver
     textSize(18);
     textAlign(LEFT, TOP);
     fill(0, 0, 100);
-    text(_displayText, x + 10, y + 10, w - 20, h - 20);
+    // text(_displayText, x + 10, y + 10, w - 20, h - 20);
+    textFont('SimSun');
+    const displayText = this._activeClue.description;
+    const translatedText = await Translator.getInstance().translate(displayText);
+    const finalText = displayText + "\n[译: " + translatedText + "]";
+    text(finalText, x + 10, y + 10, w - 20, h - 20);
 
     feed.render();
   }
