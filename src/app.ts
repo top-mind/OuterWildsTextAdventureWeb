@@ -55,7 +55,7 @@ export let mediumFontData: Font;
 (window as any).setup = function setup(): void
 {
   const canvas = document.getElementById("game-canvas");
-  createCanvas(1440, 1080, null, canvas);
+  createCanvas(1600, 900, null, canvas);
 
   // 设置像素密度以改善缩放质量
   pixelDensity(2);

@@ -103,14 +103,19 @@ export class DatabaseScreen extends OWScreen implements ClueButtonObserver
     textSize(18);
     textAlign(LEFT, TOP);
     fill(0, 0, 100);
-    // text(_displayText, x + 10, y + 10, w - 20, h - 20);
-    textFont('SimSun');
-    const displayText = this._activeClue.description;
-    const translatedText = await Translator.getInstance().translate(displayText);
-    const finalText = displayText + "\n[译: " + translatedText + "]";
-    text(finalText, x + 10, y + 10, w - 20, h - 20);
+    text(_displayText, x + 10, y + 10, w - 20, h - 20);
 
     feed.render();
+
+    let translatedText = await Translator.getInstance().translate(_displayText);
+    push();
+    textFont('SimSun');
+    textSize(18);
+    textAlign(LEFT, TOP);
+    fill(0, 0, 100);
+    textWrap(CHAR);
+    text(translatedText, x + 10, y + 10 + h, w - 20, h - 20);
+    pop();
   }
 }
 

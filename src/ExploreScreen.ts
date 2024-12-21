@@ -37,7 +37,7 @@ export class ExploreScreen extends OWScreen implements DatabaseObserver
 	async render(): Promise<void>
 	{
 		push();
-		translate(width/2 - ExploreScreen.BOX_WIDTH/2, height/2 - ExploreScreen.BOX_HEIGHT/2);
+		translate(width/2 - ExploreScreen.BOX_WIDTH/2, height/2 - ExploreScreen.BOX_HEIGHT);
 
 			stroke(0, 0, 100);
 			fill(0, 0, 0);
@@ -49,16 +49,26 @@ export class ExploreScreen extends OWScreen implements DatabaseObserver
 		    textFont(mediumFontData);
 		    textSize(18);
 			textAlign(LEFT, TOP);
-			// text(this._exploreData.getExploreText(), 10, 10, ExploreScreen.BOX_WIDTH - 20, ExploreScreen.BOX_HEIGHT - 10);
-			textFont('SimSun');
-			const displayText = this._exploreData.getExploreText();
-			const translatedText = await Translator.getInstance().translate(displayText);
-			const finalText = displayText + "\n[译: " + translatedText + "]";
-			text(finalText, 10, 10, ExploreScreen.BOX_WIDTH - 20, ExploreScreen.BOX_HEIGHT - 10);
-
+			text(this._exploreData.getExploreText(), 10, 10, ExploreScreen.BOX_WIDTH - 20, ExploreScreen.BOX_HEIGHT - 10);
 		pop();
 
 		feed.render();
+
+		let translatedText = await Translator.getInstance().translate(this._exploreData.getExploreText());
+		push();
+		translate(width/2 - ExploreScreen.BOX_WIDTH/2, height/2);
+			stroke(0, 0, 0);
+			strokeWeight(3);
+			fill(0, 0, 100);
+			rectMode(CORNER);
+			textFont('SimSun');
+			textAlign(LEFT, TOP);
+			textSize(18);
+			textWrap(CHAR);
+			text(translatedText, 0, 10, ExploreScreen.BOX_WIDTH - 20);
+
+		pop();
+
 		timeLoop.renderTimer();
 	}
 

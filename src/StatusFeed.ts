@@ -79,6 +79,9 @@ export class StatusLine
 
     textAlign(LEFT);
     fill(this._lineColor);
+    push();
+    stroke(0, 0, 0);
+    strokeWeight(2);
     
     const lines = this._line.split('\n');
     let currentY = y;
@@ -101,6 +104,7 @@ export class StatusLine
         x -= 10;
       }
     }
+    pop();
     
     textFont(smallFontData);
     return this._line.length <= this.getDisplayLength();
